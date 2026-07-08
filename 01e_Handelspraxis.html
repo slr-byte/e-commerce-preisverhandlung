@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Handelspraxis – Verhandeln im Chat: Preisgespräche auf Kleinanzeigen-Plattformen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700;9..144,900&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --copper: #A6642E;
+    --copper-dark: #7E4A1F;
+    --olive: #6B7042;
+    --olive-light: #EDEFE0;
+    --brick: #9C3D2E;
+    --brick-light: #F6E8E4;
+    --paper: #FAF6EF;
+    --ink: #2B2620;
+    --ink-soft: #5C554B;
+    --line: #D9CFBF;
+    --white: #FFFFFF;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Public Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.65;
+    font-size: 17px;
+  }
+
+  .page {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* ── Masthead ─────────────────────────── */
+  .masthead {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 28px 0 14px;
+    border-bottom: 3px solid var(--ink);
+  }
+  .masthead .brand {
+    font-family: 'Fraunces', serif;
+    font-weight: 900;
+    font-size: 1.6rem;
+    letter-spacing: -0.01em;
+  }
+  .masthead .brand span { color: var(--copper); }
+  .masthead .issue {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+    text-align: right;
+  }
+
+  .rubrik-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--olive);
+  }
+
+  /* ── Titel ─────────────────────────── */
+  .titelblock { padding: 52px 0 24px; }
+  .titelblock h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 900;
+    font-size: clamp(2.1rem, 5.5vw, 3.4rem);
+    line-height: 1.08;
+    letter-spacing: -0.015em;
+    max-width: 15em;
+  }
+  .titelblock h1 em {
+    font-style: italic;
+    color: var(--brick);
+  }
+  .vorspann {
+    margin-top: 22px;
+    font-size: 1.15rem;
+    color: var(--ink-soft);
+    max-width: 38em;
+    line-height: 1.6;
+  }
+  .autorenzeile {
+    margin-top: 20px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+  .autorenzeile .dot { color: var(--copper); }
+
+  /* ── Abschnitte ─────────────────────────── */
+  section { margin-top: 56px; }
+
+  .kicker {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--copper);
+    margin-bottom: 8px;
+  }
+
+  h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 1.75rem;
+    line-height: 1.2;
+    margin-bottom: 18px;
+  }
+
+  h3 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 1.2rem;
+    margin: 28px 0 10px;
+  }
+
+  p { margin-bottom: 16px; max-width: 42em; }
+  p strong { font-weight: 700; }
+
+  /* ── Wortkarte (Begriffserklärung) ─────── */
+  .wortkarte {
+    background: var(--olive-light);
+    border-left: 4px solid var(--olive);
+    padding: 16px 20px;
+    margin: 22px 0;
+    max-width: 42em;
+    border-radius: 0 6px 6px 0;
+  }
+  .wortkarte .wort {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--olive);
+    display: block;
+    margin-bottom: 4px;
+  }
+  .wortkarte p { margin: 0; font-size: 0.95rem; }
+
+  /* ── Hang-Tag (Preisschild-Tipp) ────────── */
+  .tag-tipp {
+    position: relative;
+    background: var(--white);
+    border: 1.5px solid var(--copper);
+    border-radius: 8px;
+    padding: 18px 22px 18px 56px;
+    margin: 26px 0;
+    max-width: 42em;
+    box-shadow: 3px 3px 0 rgba(166, 100, 46, 0.15);
+  }
+  .tag-tipp::before {
+    content: "";
+    position: absolute;
+    left: 18px;
+    top: 20px;
+    width: 22px;
+    height: 22px;
+    background: var(--copper);
+    clip-path: polygon(0 30%, 30% 0, 100% 0, 100% 100%, 30% 100%);
+    border-radius: 2px;
+  }
+  .tag-tipp::after {
+    content: "";
+    position: absolute;
+    left: 24px;
+    top: 28px;
+    width: 5px;
+    height: 5px;
+    background: var(--white);
+    border-radius: 50%;
+  }
+  .tag-tipp .tag-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--copper);
+    display: block;
+    margin-bottom: 6px;
+  }
+  .tag-tipp p { margin: 0; font-size: 0.97rem; }
+
+  /* ── Chat-Beispiele ─────────────────────── */
+  .chat-vergleich {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+    margin: 28px 0;
+  }
+  @media (max-width: 680px) {
+    .chat-vergleich { grid-template-columns: 1fr; }
+  }
+
+  .chat-karte {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--white);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .chat-kopf {
+    padding: 10px 16px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .chat-karte.schlecht .chat-kopf { background: var(--brick-light); color: var(--brick); }
+  .chat-karte.gut .chat-kopf { background: var(--olive-light); color: var(--olive); }
+  .chat-kopf .punkt {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: currentColor; flex-shrink: 0;
+  }
+
+  .chat-verlauf {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+  }
+  .nachricht {
+    max-width: 88%;
+    padding: 10px 14px;
+    border-radius: 14px;
+    font-size: 0.92rem;
+    line-height: 1.5;
+  }
+  .nachricht .absender {
+    display: block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+    opacity: 0.7;
+  }
+  .nachricht.kaeufer {
+    align-self: flex-start;
+    background: #F0EBE1;
+    border-bottom-left-radius: 4px;
+  }
+  .nachricht.verkaeufer {
+    align-self: flex-end;
+    background: var(--olive-light);
+    border-bottom-right-radius: 4px;
+  }
+  .chat-karte.schlecht .nachricht.verkaeufer { background: var(--brick-light); }
+
+  .chat-fazit {
+    padding: 12px 16px;
+    font-size: 0.88rem;
+    border-top: 1px dashed var(--line);
+    color: var(--ink-soft);
+  }
+  .chat-fazit strong { color: var(--ink); }
+
+  /* ── Strategien-Liste ───────────────────── */
+  .strategie-liste {
+    list-style: none;
+    margin: 20px 0;
+    max-width: 42em;
+  }
+  .strategie-liste li {
+    position: relative;
+    padding: 14px 0 14px 34px;
+    border-bottom: 1px solid var(--line);
+  }
+  .strategie-liste li:last-child { border-bottom: none; }
+  .strategie-liste li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    top: 13px;
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    color: var(--copper);
+    font-size: 1.1rem;
+  }
+  .strategie-liste li strong { display: inline; }
+
+  /* ── Checkliste ─────────────────────────── */
+  .checkliste {
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 26px 28px;
+    margin: 30px 0;
+  }
+  .checkliste h3 { margin-top: 0; }
+  .checkliste label {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 9px 0;
+    cursor: pointer;
+    font-size: 0.97rem;
+  }
+  .checkliste input[type="checkbox"] {
+    margin-top: 4px;
+    width: 17px; height: 17px;
+    accent-color: var(--olive);
+    flex-shrink: 0;
+  }
+  .checkliste input:checked + span { color: var(--olive); }
+
+  /* ── Zitat / Merksatz ───────────────────── */
+  .merksatz {
+    margin: 40px 0;
+    padding: 6px 0 6px 26px;
+    border-left: 4px solid var(--brick);
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 1.35rem;
+    line-height: 1.4;
+    color: var(--ink);
+    max-width: 30em;
+  }
+
+  /* ── Fußzeile ───────────────────────────── */
+  .fusszeile {
+    margin-top: 70px;
+    padding-top: 18px;
+    border-top: 3px solid var(--ink);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+  }
+
+  /* ── Druck ──────────────────────────────── */
+  @media print {
+    body { background: #fff; font-size: 11pt; }
+    .page { max-width: 100%; padding: 0; }
+    .chat-vergleich { grid-template-columns: 1fr 1fr; }
+    .tag-tipp { box-shadow: none; }
+    .titelblock { padding-top: 20px; }
+    section { margin-top: 32px; break-inside: avoid-page; }
+    .chat-karte, .checkliste, .tag-tipp, .wortkarte { break-inside: avoid; }
+    a { color: inherit; text-decoration: none; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="masthead">
+    <div class="brand">Handels<span>praxis</span></div>
+    <div class="issue">DAS MAGAZIN FÜR KAUFEN &amp; VERKAUFEN<br>AUSGABE 07 / 2026 · SEITE 14</div>
+  </header>
+  <div class="rubrik-bar">
+    <span>Rubrik: Verhandeln &amp; Kommunikation</span>
+    <span>Lesezeit: ca. 5 Minuten</span>
+  </div>
+
+  <div class="titelblock">
+    <div class="kicker">Privatverkauf online</div>
+    <h1>Verhandeln im Chat: <em>Preisgespräche</em> auf Kleinanzeigen-Plattformen</h1>
+    <p class="vorspann">Auf Kleinanzeigen-Plattformen wird fast jeder Preis verhandelt – meistens schriftlich im Chat. Wer die Nutzen-Argumentation und das Win-Win-Prinzip kennt, verkauft schneller, erzielt bessere Preise und bleibt dabei fair.</p>
+    <div class="autorenzeile">
+      <span>TEXT: REDAKTION HANDELSPRAXIS</span>
+    </div>
+  </div>
+
+  <section>
+    <div class="kicker">01 · Einführung</div>
+    <h2>Warum online fast immer verhandelt wird</h2>
+    <p>Eine Preisverhandlung ist ein Gespräch, bei dem zwei Seiten versuchen, sich zu einigen. Auf Kleinanzeigen-Plattformen gehört das dazu: Die meisten Käuferinnen und Käufer schreiben zuerst eine Nachricht mit einem niedrigeren Preisvorschlag.</p>
+    <p>Die Besonderheit: Die Verhandlung findet <strong>schriftlich im Chat</strong> statt. Man sieht die andere Person nicht und hört ihre Stimme nicht. Deshalb kommt es besonders darauf an, <strong>klar und freundlich zu formulieren</strong>. Wer nur „Nein, der Preis ist fest" schreibt, verliert oft den Kontakt – und damit vielleicht einen guten Verkauf. Zwei Ansätze helfen dabei: die <strong>Nutzen-Argumentation</strong> und das <strong>Win-Win-Prinzip</strong>.</p>
+  </section>
+
+  <section>
+    <div class="kicker">02 · Nutzen-Argumentation</div>
+    <h2>Nicht das Produkt beschreiben – den Nutzen zeigen</h2>
+
+    <div class="wortkarte">
+      <span class="wort">Fachbegriff: Nutzen-Argumentation</span>
+      <p>Bei der Nutzen-Argumentation erklärt die verkaufende Person nicht nur, <em>was</em> das Produkt kann (Eigenschaften), sondern <em>was die Käuferin oder der Käufer davon hat</em> (Nutzen).</p>
+    </div>
+
+    <p>Vor dem Antworten sollte man überlegen: <strong>Was braucht die Person, die anfragt? Worauf legt sie Wert?</strong> Die Nachrichten verraten oft schon viel. Fragt jemand „Funktioniert die Maschine noch einwandfrei?", ist ihm <strong>Zuverlässigkeit</strong> wichtig. Fragt jemand „Kann ich sie heute noch abholen?", zählt vor allem <strong>Zeit</strong>. Statt nur technische Details aufzuzählen, erklärt man dann, wie das Produkt der Person konkret hilft.</p>
+
+    <h3>So funktioniert es im Chat</h3>
+    <div class="chat-vergleich">
+      <div class="chat-karte schlecht">
+        <div class="chat-kopf"><span class="punkt"></span>So lieber nicht</div>
+        <div class="chat-verlauf">
+          <div class="nachricht kaeufer"><span class="absender">Interessent</span>Hallo, würden Sie die Kaffeemaschine auch für 60&nbsp;€ statt 90&nbsp;€ verkaufen?</div>
+          <div class="nachricht verkaeufer"><span class="absender">Verkäufer</span>Nein. 90&nbsp;€. Die hat 15 bar Pumpendruck und ein Edelstahlgehäuse.</div>
+          <div class="nachricht kaeufer"><span class="absender">Interessent</span>Ok, dann nicht. Trotzdem danke.</div>
+        </div>
+        <div class="chat-fazit"><strong>Problem:</strong> Nur Eigenschaften, kein Nutzen – der Interessent springt ab.</div>
+      </div>
+
+      <div class="chat-karte gut">
+        <div class="chat-kopf"><span class="punkt"></span>Besser so</div>
+        <div class="chat-verlauf">
+          <div class="nachricht kaeufer"><span class="absender">Interessent</span>Hallo, würden Sie die Kaffeemaschine auch für 60&nbsp;€ statt 90&nbsp;€ verkaufen?</div>
+          <div class="nachricht verkaeufer"><span class="absender">Verkäufer</span>Hallo! Ich verstehe, dass Sie sparen möchten. Die Maschine ist erst 1 Jahr alt und frisch entkalkt – Sie können sie sofort nutzen. Neu kostet sie 220&nbsp;€. Bei 80&nbsp;€ würde ich sie Ihnen geben.</div>
+          <div class="nachricht kaeufer"><span class="absender">Interessent</span>Das klingt fair. 80&nbsp;€ passt – wann kann ich vorbeikommen?</div>
+        </div>
+        <div class="chat-fazit"><strong>Stärke:</strong> Konkreter Nutzen (sofort einsatzbereit, große Ersparnis zum Neupreis) plus ein faires Gegenangebot.</div>
+      </div>
+    </div>
+
+    <div class="tag-tipp">
+      <span class="tag-label">Tipp · Nutzen-Argumentation</span>
+      <p>Drei Fragen vor jeder Antwort: <br></br><strong>1.</strong> Was braucht die Person? <br><strong>2.</strong> Welchen konkreten Vorteil hat mein Produkt für sie? <br><strong>3.</strong> Wie zeige ich diesen Vorteil in einem Satz?</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="kicker">03 · Win-Win-Prinzip</div>
+    <h2>Beide Seiten sollen gewinnen</h2>
+
+    <div class="wortkarte">
+      <span class="wort">Fachbegriff: Win-Win-Prinzip</span>
+      <p>„Win" ist Englisch und bedeutet „gewinnen". Verkäufer und Käufer suchen gemeinsam eine Lösung, mit der <em>beide</em> Seiten zufrieden sind. Niemand soll sich als Verlierer fühlen.</p>
+    </div>
+
+    <p>Viele denken beim Verhandeln nur an den Preis. Dabei gibt es oft <strong>mehr als eine Stellschraube</strong>: Abholung oder Versand, der Zeitpunkt der Übergabe oder Zubehör, das man dazugeben kann. Wer die Nachrichten aufmerksam liest, findet heraus, was der anderen Person wirklich wichtig ist – genau dort liegt oft die gemeinsame Lösung.</p>
+
+    <h3>Strategien für eine Win-Win-Verhandlung</h3>
+    <ul class="strategie-liste">
+      <li><strong>Aufmerksam lesen und darauf eingehen.</strong> Welche Fragen und Wünsche nennt die andere Person? Die Antwort sollte sich darauf beziehen.</li>
+      <li><strong>Gemeinsame Interessen finden.</strong> Beide wollen meistens dasselbe: einen schnellen, unkomplizierten Verkauf ohne Ärger.</li>
+      <li><strong>Mehr als den Preis verhandeln.</strong> Wenn der Preis feststeht, kann man an anderer Stelle entgegenkommen: Zubehör dazulegen, die Ware reservieren, sich auf halbem Weg treffen.</li>
+      <li><strong>Fair bleiben – auch bei Absagen.</strong> Vielleicht meldet sich die Person später wieder oder empfiehlt das Angebot weiter.</li>
+    </ul>
+
+    <h3>Win-Win im Chat: ein Beispiel</h3>
+    <div class="chat-vergleich">
+      <div class="chat-karte gut" style="grid-column: 1 / -1;">
+        <div class="chat-kopf"><span class="punkt"></span>Win-Win in der Praxis</div>
+        <div class="chat-verlauf">
+          <div class="nachricht kaeufer"><span class="absender">Interessentin</span>Hallo! Das Fahrrad gefällt mir, aber 150&nbsp;€ ist mir zu viel. Ich könnte 120&nbsp;€ zahlen. Und ich bräuchte es erst nächste Woche, vorher schaffe ich die Abholung nicht.</div>
+          <div class="nachricht verkaeufer"><span class="absender">Verkäuferin</span>Hallo! Bei 120&nbsp;€ kann ich leider nicht zusagen, weil ich gerade neue Bremsen eingebaut habe. Mein Vorschlag: 135&nbsp;€ – dafür reserviere ich Ihnen das Rad fest bis nächste Woche und lege das Fahrradschloss gratis dazu.</div>
+          <div class="nachricht kaeufer"><span class="absender">Interessentin</span>Das ist ein faires Angebot! So machen wir es.</div>
+        </div>
+        <div class="chat-fazit"><strong>Warum Win-Win?</strong> Die Verkäuferin geht auf beide Wünsche ein (Preis <em>und</em> Zeitpunkt), begründet ihren Preis und bietet einen Zusatznutzen an. Beide Seiten gewinnen.</div>
+      </div>
+    </div>
+
+    <div class="tag-tipp">
+      <span class="tag-label">Tipp · Preis begründen</span>
+      <p>Ein Gegenangebot überzeugt viel mehr, wenn man es <strong>begründet</strong>: guter Zustand, Originalrechnung, Neupreis zum Vergleich. Ein Preis ohne Begründung wirkt schnell wie reine Taktik.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="kicker">04 · Selbstcheck</div>
+    <h2>Checkliste: Bin ich bereit für die Preisverhandlung?</h2>
+    <div class="checkliste">
+      <label><input type="checkbox"><span>Ich habe Vergleichsangebote angesehen und weiß, was mein Produkt wert ist.</span></label>
+      <label><input type="checkbox"><span>Ich habe eine <strong>Preisuntergrenze</strong> festgelegt – den niedrigsten Preis, den ich akzeptiere.</span></label>
+      <label><input type="checkbox"><span>Ich kann mindestens <strong>zwei konkrete Nutzen</strong> meines Produkts nennen – nicht nur Eigenschaften.</span></label>
+      <label><input type="checkbox"><span>Ich weiß, wo ich entgegenkommen kann, wenn beim Preis nichts mehr geht (Zubehör, Reservierung, Treffpunkt).</span></label>
+      <label><input type="checkbox"><span>Mein Ton bleibt freundlich – auch bei einem sehr niedrigen Angebot.</span></label>
+    </div>
+  </section>
+
+  <section>
+    <div class="kicker">05 · Fazit</div>
+    <h2>Gut verhandeln heißt: an beide Seiten denken</h2>
+    <p>Nutzen-Argumentation und Win-Win-Prinzip helfen, gute Verhandlungsergebnisse zu erzielen. Wer den <strong>Nutzen für die andere Person</strong> in den Mittelpunkt stellt und nach Lösungen sucht, <strong>von denen beide profitieren</strong>, verkauft erfolgreicher – und hinterlässt einen guten Eindruck, der sich durch positive Bewertungen auszahlt.</p>
+
+    <div class="merksatz">„Der beste Abschluss ist der, nach dem beide Seiten das Gefühl haben, ein gutes Geschäft gemacht zu haben."</div>
+  </section>
+
+  <footer class="fusszeile">
+    <span>HANDELSPRAXIS · DAS MAGAZIN FÜR KAUFEN &amp; VERKAUFEN</span>
+    <span>RUBRIK: VERHANDELN &amp; KOMMUNIKATION · S. 14–15</span>
+  </footer>
+
+</div>
+</body>
+</html>
